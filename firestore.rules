@@ -1,0 +1,14 @@
+rules_version = '2';
+// Rules for the Numacore website survey (project numacore-ios).
+// Paste into Firebase console → Firestore Database → Rules.
+// Visitors may create and update their own survey response; nobody can read or
+// delete responses from the browser (read them in the console or with admin access).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /survey_responses/{responseId} {
+      allow create, update: if request.resource.data.surveyId == 'feature_discovery_v1'
+                            && request.resource.data.keys().size() <= 20;
+      allow read, delete: if false;
+    }
+  }
+}
